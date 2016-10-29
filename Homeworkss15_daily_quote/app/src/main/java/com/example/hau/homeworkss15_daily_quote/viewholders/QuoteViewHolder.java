@@ -10,11 +10,13 @@ import android.widget.TextView;
 import com.example.hau.homeworkss15_daily_quote.R;
 import com.example.hau.homeworkss15_daily_quote.constants.Constants;
 import com.example.hau.homeworkss15_daily_quote.managers.FileManager;
+import com.example.hau.homeworkss15_daily_quote.managers.NetworkManger;
 import com.example.hau.homeworkss15_daily_quote.managers.Preferrences;
 import com.example.hau.homeworkss15_daily_quote.models.Quote;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,12 +45,17 @@ public class QuoteViewHolder extends RecyclerView.ViewHolder {
         tvContent.setText(Html.fromHtml(quote.getContent()));
         tvUsername.setText(String.format("Hi, %s", Preferrences.getInstance().getUsername()));
 
-//        File file = FileManager.getInstance().loadImageFile(String.format(FileManager.IMAGE_DIR_FORMAT, getAdapterPosition()));
-//        ImageLoader.getInstance().displayImage(
-//                Uri.fromFile(file).toString(),
-//                imvBackground
-//        );
+        if (NetworkManger.getInstance().isConnectedToInternet()) {
+            ImageLoader.getInstance().displayImage(Constants.UNPLASH_API, imvBackground);
+        } else {
+            Random random = new Random();
+            int position = random.nextInt(10);
+            File file = FileManager.getInstance().loadImageFile(String.format(FileManager.IMAGE_DIR_FORMAT, position));
+            ImageLoader.getInstance().displayImage(
+                    Uri.fromFile(file).toString(),
+                    imvBackground
+            );
+        }
 //        imvBackground.setImageBitmap(quote.getBitmap());
-        ImageLoader.getInstance().displayImage(Constants.UNPLASH_API, imvBackground);
     }
 }

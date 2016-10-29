@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.hau.homeworkss15_daily_quote.fragments.LoginFragment;
 import com.example.hau.homeworkss15_daily_quote.fragments.QuoteFragment;
+import com.example.hau.homeworkss15_daily_quote.managers.NetworkManger;
 import com.example.hau.homeworkss15_daily_quote.managers.Preferrences;
 import com.example.hau.homeworkss15_daily_quote.models.FragmentEvent;
 import com.example.hau.homeworkss15_daily_quote.services.UnplashDownloadService;
@@ -31,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             changeFragment(new QuoteFragment(), false);
         }
-
-        Intent intent = new Intent(this, UnplashDownloadService.class);
-        startService(intent);
-        Log.d(TAG, "startService");
+        if (NetworkManger.getInstance().isConnectedToInternet()) {
+            Intent intent = new Intent(this, UnplashDownloadService.class);
+            startService(intent);
+            Log.d(TAG, "startService");
+        }
     }
 
     @Subscribe

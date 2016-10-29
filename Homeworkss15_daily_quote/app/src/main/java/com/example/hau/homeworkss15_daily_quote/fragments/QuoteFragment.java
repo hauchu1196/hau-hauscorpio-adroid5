@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.example.hau.homeworkss15_daily_quote.R;
 import com.example.hau.homeworkss15_daily_quote.adapters.QuoteAdapter;
 import com.example.hau.homeworkss15_daily_quote.constants.Constants;
 import com.example.hau.homeworkss15_daily_quote.jsonmodels.QuoteJSONModel;
+import com.example.hau.homeworkss15_daily_quote.managers.DbHelper;
 import com.example.hau.homeworkss15_daily_quote.models.Quote;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -64,7 +67,8 @@ public class QuoteFragment extends Fragment {
     }
 
     private void setupUI() {
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+//        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvQuote.setLayoutManager(layoutManager);
         quoteAdapter = new QuoteAdapter();
         rvQuote.setAdapter(quoteAdapter);
@@ -102,7 +106,10 @@ public class QuoteFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Quote.list.clear();
+                Quote.list.add(DbHelper.getInstance().selectRandomQuote());
+                updateQuote();
+                Log.d(TAG, String.valueOf(Quote.list.size()));
             }
 
             @Override
@@ -113,10 +120,16 @@ public class QuoteFragment extends Fragment {
                     Gson gson = new Gson();
                     QuoteJSONModel[] quotes = gson.fromJson(bodyString, QuoteJSONModel[].class);
 
-                    for (QuoteJSONModel quoteJSONModel : quotes) {
-//                        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(Constants.UNPLASH_API);
-                        Quote.list.add(new Quote(quoteJSONModel.getTitle(), quoteJSONModel.getContent()));
+//                    for (QuoteJSONModel quoteJSONModel : quotes) {
+////                        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(Constants.UNPLASH_API);
+//                        Quote.list.add(new Quote(quoteJSONModel.getTitle(), quoteJSONModel.getContent()));
+//                    }
+                    Quote.list.clear();
+                    for (QuoteJSONModel q : quotes) {
+                        DbHelper.getInstance().insert(new Quote(q.getTitle(), q.getContent()));
                     }
+                    Quote quote = new Quote(quotes[0].getTitle(), quotes[0].getContent());
+                    Quote.list.add(quote);
                     if (quotes.length > 0) {
                         updateQuote();
                     }

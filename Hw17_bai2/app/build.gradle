@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
 
     defaultConfig {
-        applicationId "com.example.hau.homeworkss15_daily_quote"
+        applicationId "com.example.hau.hw17_bai2"
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 1
@@ -23,20 +24,13 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.4.1'
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
-    compile 'com.sromku:simple-storage:1.2.0'
-
-    compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
-
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.android.support:support-v4:24.2.1'
 }

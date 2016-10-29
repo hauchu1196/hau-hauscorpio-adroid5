@@ -9,29 +9,39 @@ import java.util.List;
  * Created by Hau on 25/10/2016.
  */
 public class Quote {
+    private int id;
     private String title;
     private String content;
 
-    public Quote(String title, String content) {
+    public Quote(int id, String title, String content) {
+        this.id = id;
         this.title = title;
         this.content = content;
+    }
+
+    public Quote(String title, String content) {
+        this(-1, title, content);
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getContent() {
-        return content.replace("\n", "");
+        return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    @Override
+    public String toString() {
+        return String.format("%s, %s, %s", id, title, content);
     }
-
-    public static final List<Quote> list = new ArrayList<>();
+    public static List<Quote> list = new ArrayList<>();
 }

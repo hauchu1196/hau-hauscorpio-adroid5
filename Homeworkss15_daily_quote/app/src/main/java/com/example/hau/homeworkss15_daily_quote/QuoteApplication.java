@@ -2,6 +2,7 @@ package com.example.hau.homeworkss15_daily_quote;
 
 import android.app.Application;
 
+import com.example.hau.homeworkss15_daily_quote.managers.DbHelper;
 import com.example.hau.homeworkss15_daily_quote.managers.FileManager;
 import com.example.hau.homeworkss15_daily_quote.managers.NetworkManger;
 import com.example.hau.homeworkss15_daily_quote.managers.Preferrences;
@@ -20,6 +21,7 @@ public class QuoteApplication extends Application {
         Preferrences.init(this);
         FileManager.init(this);
         initImageLoader();
+        DbHelper.init(this);
 
 
     }
