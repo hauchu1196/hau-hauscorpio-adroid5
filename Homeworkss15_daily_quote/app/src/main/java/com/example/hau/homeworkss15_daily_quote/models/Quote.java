@@ -5,10 +5,12 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Hau on 25/10/2016.
  */
-public class Quote {
+public class Quote extends RealmObject {
     private int id;
     private String title;
     private String content;
@@ -17,6 +19,10 @@ public class Quote {
         this.id = id;
         this.title = title;
         this.content = content;
+    }
+
+    public Quote() {
+
     }
 
     public Quote(String title, String content) {

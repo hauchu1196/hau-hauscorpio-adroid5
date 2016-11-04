@@ -2,10 +2,12 @@ package com.example.hau.homeworkss15_daily_quote;
 
 import android.app.Application;
 
+import com.example.hau.homeworkss15_daily_quote.managers.DbContextRealm;
 import com.example.hau.homeworkss15_daily_quote.managers.DbHelper;
 import com.example.hau.homeworkss15_daily_quote.managers.FileManager;
 import com.example.hau.homeworkss15_daily_quote.managers.NetworkManger;
 import com.example.hau.homeworkss15_daily_quote.managers.Preferrences;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -22,12 +24,19 @@ public class QuoteApplication extends Application {
         FileManager.init(this);
         initImageLoader();
         DbHelper.init(this);
+        DbContextRealm.init(this);
 
 
     }
 
     private void initImageLoader() {
-        ImageLoaderConfiguration imageLoaderConfiguration = new ImageLoaderConfiguration.Builder(this).build();
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageLoaderConfiguration imageLoaderConfiguration = new ImageLoaderConfiguration.Builder(this)
+                .defaultDisplayImageOptions(displayImageOptions)
+                .build();
         ImageLoader.getInstance().init(imageLoaderConfiguration);
     }
 }

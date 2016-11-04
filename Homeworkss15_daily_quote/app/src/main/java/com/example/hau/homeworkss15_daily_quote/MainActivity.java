@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.hau.homeworkss15_daily_quote.fragments.LoginFragment;
 import com.example.hau.homeworkss15_daily_quote.fragments.QuoteFragment;
+import com.example.hau.homeworkss15_daily_quote.managers.DbContextRealm;
 import com.example.hau.homeworkss15_daily_quote.managers.NetworkManger;
 import com.example.hau.homeworkss15_daily_quote.managers.Preferrences;
 import com.example.hau.homeworkss15_daily_quote.models.FragmentEvent;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, UnplashDownloadService.class);
             startService(intent);
             Log.d(TAG, "startService");
+        } else {
+            Log.d(TAG, String.format("SizeImage = %s", DbContextRealm.getInstance().getSizeImage()));
         }
     }
 

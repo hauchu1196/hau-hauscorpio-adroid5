@@ -6,4 +6,5 @@ package com.example.hau.homeworkss15_daily_quote.constants;
 public class Constants {
     public static String UNPLASH_API = "https://source.unsplash.com/category/nature/600x800";
     public static String QUOTE_API = "http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=10";
+    public static String BASE_URL_QUOTE_API = "http://quotesondesign.com/";
 }

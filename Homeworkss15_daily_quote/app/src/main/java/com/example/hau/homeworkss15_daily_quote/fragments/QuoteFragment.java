@@ -2,28 +2,27 @@ package com.example.hau.homeworkss15_daily_quote.fragments;
 
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.hau.homeworkss15_daily_quote.MainActivity;
 import com.example.hau.homeworkss15_daily_quote.R;
 import com.example.hau.homeworkss15_daily_quote.adapters.QuoteAdapter;
 import com.example.hau.homeworkss15_daily_quote.constants.Constants;
 import com.example.hau.homeworkss15_daily_quote.jsonmodels.QuoteJSONModel;
+import com.example.hau.homeworkss15_daily_quote.managers.DbContextRealm;
 import com.example.hau.homeworkss15_daily_quote.managers.DbHelper;
 import com.example.hau.homeworkss15_daily_quote.models.Quote;
+import com.example.hau.homeworkss15_daily_quote.networks.QuoteService;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +31,8 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,8 +64,10 @@ public class QuoteFragment extends Fragment {
     public void onStart() {
         super.onStart();
         setupUI();
-        sendGETRequest();
+//        sendGETRequest();
+        sendGETRequestByRetrofit();
     }
+
 
     private void setupUI() {
 //        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
@@ -149,4 +152,39 @@ public class QuoteFragment extends Fragment {
     }
 
 
+    private void sendGETRequestByRetrofit() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL_QUOTE_API)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        QuoteService quoteService = retrofit.create(QuoteService.class);
+        quoteService.
+                listQuote("rand", 1)
+                .enqueue(new retrofit2.Callback<List<Quote>>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<List<Quote>> call, retrofit2.Response<List<Quote>> response) {
+                        List<Quote> quoteList = response.body();
+                        Quote.list.clear();
+                        for (Quote quote : quoteList) {
+                            Quote.list.add(quote);
+                            if (DbContextRealm.getInstance().getSizeQuote() < 10) {
+                                DbContextRealm.getInstance().add(quote);
+                            }
+                        }
+                        for (Quote quote : DbContextRealm.getInstance().findAllQuote()) {
+                            Log.d(TAG, quote.toString());
+                        }
+                        if (quoteList.size() > 0) {
+                            updateQuote();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(retrofit2.Call<List<Quote>> call, Throwable t) {
+                        Log.d(TAG, "onFailure");
+                        Quote.list.add(DbContextRealm.getInstance().findFirstQuoteRandom());
+                        updateQuote();
+                    }
+                });
+    }
 }
